@@ -8,33 +8,39 @@
 	<meta name="viewport" content="width=device-width">
 	<style>
 		.alertify-log-custom {
-			background: blue;
+			background: greenyellow;
 		}
 	</style>
 </head>
 <body>
 
 	<h2>Dialogs</h2>
-	<a href="#" id="alert">Alert Dialog</a><br>
-	<a href="#" id="confirm">Confirm Dialog</a><br>
-	<a href="#" id="prompt">Prompt Dialog</a><br>
-	<a href="#" id="labels">Custom Labels</a><br>
-	<a href="#" id="focus">Button Focus</a><br>
-	<a href="#" id="order">Button Order</a>
+	<a href="javascript:void(0)" id="alert">Alert Dialog</a><br>
+	<a href="javascript:void(0)" id="confirm">Confirm Dialog</a><br>
+	<a href="javascript:void(0)" id="prompt">Prompt Dialog</a><br>
+	<a href="javascript:void(0)" id="labels">Custom Labels</a><br>
+	<a href="javascript:void(0)" id="focus">Button Focus</a><br>
+	<a href="javascript:void(0)" id="order">Button Order</a>
 
 	<h2>Ajax</h2>
-	<a href="#" id="ajax">Ajax - Multiple Dialog</a>
+	<a href="javascript:void(0)" id="ajax">Ajax - Multiple Dialog</a>
 
 	<h2>Logs</h2>
-	<a href="#" id="notification">Standard Log</a><br>
-	<a href="#" id="success">Success Log</a><br>
-	<a href="#" id="error">Error Log</a><br>
-	<a href="#" id="custom">Custom Log</a><br>
-	<a href="#" id="delay">Hide in 10 seconds</a><br>
-	<a href="#" id="forever">Persistent Log</a>
+	<a href="javascript:void(0)" id="notification">Standard Log</a><br>
+	<a href="javascript:void(0)" id="success">Success Log</a><br>
+	<a href="javascript:void(0)" id="error">Error Log</a><br>
+	<a href="javascript:void(0)" id="custom">Custom Log</a><br>
+	<a href="javascript:void(0)" id="delay">Hide in 10 seconds</a><br>
+	<a href="javascript:void(0)" id="forever">Persistent Log</a><br>
+	<a href="javascript:void(0)" id="customd">Custom dialog</a>
 
-	<h2>Themes</h2>
-	<a href="#" id="bootstrap">Bootstrap Theme</a>
+	<div id="custom-content" style="display: none">
+		<div style="background-color: #D6E9C6; text-align: center">
+			<div><label for="inputtext">Input: </label> <input id="inputtext" type="text" placeholder="Write something"></div>
+			<div><label for="selcolors">Color: </label> <select id="selcolors"><option>Orange</option><option>Green</option><option>Blue</option></select></div>
+
+		</div>
+	</div>
 
 	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 	<script src="../lib/alertify.min.js"></script>
@@ -114,6 +120,12 @@
 		$("#error").on( 'click', function () {
 			reset();
 			alertify.error("Error log message");
+			return false;
+		});
+
+		$("#customd").on( 'click', function () {
+			reset();
+			alertify.dialog($("#custom-content").html(), "My custom dialog");
 			return false;
 		});
 

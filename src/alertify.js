@@ -19,6 +19,9 @@
 		 * @type {Object}
 		 */
 		dialogs = {
+			title : {
+				holder : "<nav class=\"alertify-title\">{{title}}</nav>"
+			},
 			buttons : {
 				holder : "<nav class=\"alertify-buttons\">{{buttons}}</nav>",
 				submit : "<button type=\"submit\" class=\"alertify-button alertify-button-ok\" id=\"alertify-ok\">{{ok}}</button>",
@@ -243,6 +246,7 @@
 				var html    = "",
 				    type    = item.type,
 				    message = item.message,
+				    title   = item.title || "",
 				    css     = item.cssClass || "";
 
 				html += "<div class=\"alertify-dialog\">";
@@ -254,6 +258,11 @@
 				if (type === "prompt") html += "<div id=\"alertify-form\">";
 
 				html += "<article class=\"alertify-inner\">";
+				
+				if (type === "dialog") {
+					html += dialogs.title.holder.replace("{{title}}", title);
+				}
+				
 				html += dialogs.message.replace("{{message}}", message);
 
 				if (type === "prompt") html += dialogs.input;
@@ -278,6 +287,10 @@
 				case "alert":
 					html = html.replace("{{buttons}}", dialogs.buttons.ok);
 					html = html.replace("{{ok}}", this.labels.ok);
+					break;
+				case "dialog":
+					html = html.replace("{{buttons}}", this.appendButtons(dialogs.buttons.cancel, dialogs.buttons.ok));
+					html = html.replace("{{ok}}", this.labels.ok).replace("{{cancel}}", this.labels.cancel);
 					break;
 				default:
 					break;
@@ -348,7 +361,7 @@
 			 *
 			 * @return {Object}
 			 */
-			dialog : function (message, type, fn, placeholder, cssClass) {
+			dialog : function (message, title, type, fn, placeholder, cssClass) {
 				// set the current active element
 				// this allows the keyboard focus to be resetted
 				// after the dialog box is closed
@@ -361,13 +374,14 @@
 				};
 				// error catching
 				if (typeof message !== "string") throw new Error("message must be a string");
+				if (typeof title !== "string") throw new Error("title must be a string");
 				if (typeof type !== "string") throw new Error("type must be a string");
 				if (typeof fn !== "undefined" && typeof fn !== "function") throw new Error("fn must be a function");
 				// initialize alertify if it hasn't already been done
 				this.init();
 				check();
 
-				queue.push({ type: type, message: message, callback: fn, placeholder: placeholder, cssClass: cssClass });
+				queue.push({ type: type, title: title, message: message, callback: fn, placeholder: placeholder, cssClass: cssClass });
 				if (!isopen) this.setup();
 
 				return this;
@@ -602,12 +616,13 @@
 		};
 
 		return {
-			alert   : function (message, fn, cssClass) { _alertify.dialog(message, "alert", fn, "", cssClass); return this; },
-			confirm : function (message, fn, cssClass) { _alertify.dialog(message, "confirm", fn, "", cssClass); return this; },
+			dialog  : function (message, title, fn, cssClass) { _alertify.dialog(message, title, "dialog", fn, "", cssClass); return this; },
+			alert   : function (message, fn, cssClass) { _alertify.dialog(message, "", "alert", fn, "", cssClass); return this; },
+			confirm : function (message, fn, cssClass) { _alertify.dialog(message, "", "confirm", fn, "", cssClass); return this; },
 			extend  : _alertify.extend,
 			init    : _alertify.init,
 			log     : function (message, type, wait) { _alertify.log(message, type, wait); return this; },
-			prompt  : function (message, fn, placeholder, cssClass) { _alertify.dialog(message, "prompt", fn, placeholder, cssClass); return this; },
+			prompt  : function (message, fn, placeholder, cssClass) { _alertify.dialog(message, "", "prompt", fn, placeholder, cssClass); return this; },
 			success : function (message, wait) { _alertify.log(message, "success", wait); return this; },
 			error   : function (message, wait) { _alertify.log(message, "error", wait); return this; },
 			set     : function (args) { _alertify.set(args); },
